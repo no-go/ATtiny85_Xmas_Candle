@@ -6,7 +6,12 @@
 
 #define ENDARR     55
 #define RAND_LED   33
+
 int i = 0;
+uint8_t x;
+bool stormy = false;
+int dire = +1;
+
 uint8_t mov[] = {
    0,1,2,0,1,2,4,RAND_LED,RAND_LED,RAND_LED,
    3,3,4,2,3,0,1,RAND_LED,RAND_LED,
@@ -32,17 +37,50 @@ void setup() {
   pinMode(LED_WHITE,  OUTPUT);
 }
 
-void loop() {
-  if (mov[i] == ENDARR) i=0;
-  if (mov[i] == RAND_LED) {
-    uint8_t x = getRandom()%5;
-    digitalWrite(x, HIGH);
-    delay(getRandom()%250 + 50);
-    digitalWrite(x, LOW);    
-  } else {
-    digitalWrite(mov[i], HIGH);
-    delay(getRandom()%120 + 30);
-    digitalWrite(mov[i], LOW);
+void storm() {
+  if (mov[i] == ENDARR) {
+    i=0;
+    if (getRandom()%4 == 1) {
+      stormy = false;
+      dire = 1;
+    }
   }
+  
+  if (mov[i] == RAND_LED) {
+    x = getRandom()%5;    
+  } else {
+    x = mov[i];
+  }
+
+  digitalWrite(x, HIGH);
+  delay(getRandom()%20 + 20);
+  digitalWrite(x, LOW);
   i++;
+}
+
+void normal() {
+  x = getRandom()%3;
+  if (x==2) x=3;
+  analogWrite(x, i);
+  i += dire;
+  if (i==253) dire = -1;
+  if (i==100) dire = 1;
+  delay(40);
+}
+
+void loop() {
+  if (stormy) {
+    storm();
+  } else {
+    normal();
+    if (getRandom()%1234 == 1) {
+      i=0;
+      stormy = true;
+      digitalWrite(LED_RED,    LOW);
+      digitalWrite(LED_ORANGE, LOW);
+      digitalWrite(LED_YELOW,  LOW);
+      digitalWrite(LED_WARM,   LOW);
+      digitalWrite(LED_WHITE,  LOW); 
+    }
+  }
 }
