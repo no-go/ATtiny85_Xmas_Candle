@@ -8,7 +8,7 @@
 #define RAND_LED   33
 
 int i = 0;
-uint8_t x;
+uint8_t x = 0;
 bool stormy = false;
 int dire = +1;
 
@@ -40,7 +40,7 @@ void setup() {
 void storm() {
   if (mov[i] == ENDARR) {
     i=0;
-    if (getRandom()%4 == 1) {
+    if (getRandom()%3 == 1) {
       stormy = false;
       dire = 1;
     }
@@ -63,9 +63,9 @@ void normal() {
   if (x==2) x=3;
   analogWrite(x, i);
   i += dire;
-  if (i==253) dire = -1;
-  if (i==100) dire = 1;
-  delay(40);
+  if (i==252) dire = -2;
+  if (i==160) dire = 1;
+  delay(120);
 }
 
 void loop() {
