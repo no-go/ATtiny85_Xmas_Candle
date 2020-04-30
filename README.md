@@ -1,6 +1,6 @@
 # ATtiny85 Candle
 
-LDR check sun. candle starts only at night/dark.
+candle starts only if lipo is full.
 
 ## Circuit
 
