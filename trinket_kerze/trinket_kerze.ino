@@ -2,7 +2,7 @@
 #include <avr/power.h>
 #include <avr/wdt.h>
 
-#define POWEROK 3950
+#define POWEROK 3800
 
 int vcc = 4290;
 byte ticker = 0;
@@ -35,7 +35,7 @@ void setup() {
 }
 
 void loop() {
-  if (vcc > POWEROK) {
+  if (vcc > POWEROK && fadedon == true) {
     flame[2] = flame[1];
     flame[1] = flame[0];
     flame[0] = random(80, 255);
@@ -46,9 +46,9 @@ void loop() {
   } else {
     if (fadedon == true) {
       // fade off !! ------------------
-      for (int j=0; j<255; ++j) {
-          for (int i=0; i<3; ++i) analogWrite(pins[i], 255-j); 
-          delay(40+(j/4));
+      for (int j=0; j<128; ++j) {
+          for (int i=0; i<3; ++i) analogWrite(pins[i], 128-j); 
+          delay(10+(j/4));
       }
       for (int i=0; i<3; ++i) digitalWrite(pins[i], LOW);
     }
@@ -58,11 +58,11 @@ void loop() {
     sleep_mode();
     sleep_disable();
     readVcc();
-    if (vcc > POWEROK) {
+    if (vcc > (POWEROK+80)) {
       // fade on !! ----------------------
-      for (int j=0; j<255; ++j) {
+      for (int j=0; j<128; ++j) {
         for (int i=0; i<3; ++i) analogWrite(pins[i], j); 
-        delay(40+(64-j/4));
+        delay(10+(64-j/4));
       }
       fadedon = true;     
     }
